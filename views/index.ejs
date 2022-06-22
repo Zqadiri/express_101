@@ -1,0 +1,21 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+  </head>
+  <body>
+    <h1><%=title%></h1>
+    <a href="/new">New message</a>
+    <ul class="check-list">
+      <% for(const msg of messages) {%>
+      <li>
+        <div><%=msg.added%></div>
+        <div><strong><%=msg.user%></strong></div>
+        <%=msg.text%>
+      </li>
+      <% } %>
+    </ul>
+  </body>
+</html>

@@ -1,1 +1,1 @@
-web: node ./mini-message-board/bin/www
+web: node ./bin/www
