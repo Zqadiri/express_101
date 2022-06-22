@@ -15,6 +15,7 @@ const messages = [
   },
 ];
 
+
 /* GET home page. */
 // The res.render() function is used to render a view and sends the rendered HTML string to the client. 
 router.get("/", function (req, res, next) {
