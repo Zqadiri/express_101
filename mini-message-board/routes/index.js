@@ -25,4 +25,15 @@ router.get("/new", function (req, res, next) {
   res.render("form");
 });
 
+router.post("/new", (req, res) => {
+  // console.log("===================================");
+  // console.log("mes:" + req.body.messageText);
+  messages.push({
+    text: req.body.messageText,
+    user: req.body.messageUser,
+    added: new Date()
+  });
+  res.redirect('/');
+});
+
 module.exports = router;

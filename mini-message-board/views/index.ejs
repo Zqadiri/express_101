@@ -8,7 +8,7 @@
   <body>
     <h1><%=title%></h1>
     <a href="/new">New message</a>
-    <ul>
+    <ul class="check-list">
       <% for(const msg of messages) {%>
       <li>
         <div><%=msg.added%></div>
@@ -16,5 +16,6 @@
         <%=msg.text%>
       </li>
       <% } %>
+    </ul>
   </body>
 </html>
