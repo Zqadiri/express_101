@@ -31,7 +31,7 @@ bookSchema.virtual('url').get(function(){
 
 
 // Compile a model from schema -   An instance of a model is called a document
-var bookModel = mongoose.model('Book', bookSchema);
+module.exports = mongoose.model('Book', bookSchema);
 
 //! Mongoose provides built-in and custom validators includes: required validator, 
 //! min and max for numbers, ....

@@ -11,7 +11,7 @@ var authorSchema = new Schema({
 
 
 // Virtual for author's full name
-AuthorSchema.virtual('name').get(function () {
+authorSchema.virtual('name').get(function () {
     var fullname = '';
     if (this.first_name && this.family_name)
         fullname = this.family_name + ', ' + this.first_name
@@ -21,7 +21,7 @@ AuthorSchema.virtual('name').get(function () {
 });
 
 // Virtual for author's lifespan
-AuthorSchema.virtual('lifespan').get(function() {
+authorSchema.virtual('lifespan').get(function() {
     var lifetime_string = '';
     if (this.date_of_birth) {
       lifetime_string = this.date_of_birth.getYear().toString();
@@ -34,9 +34,9 @@ AuthorSchema.virtual('lifespan').get(function() {
 });
 
 // Virtual for author's URL : returns the absolute URL required to get a particular instance of the model
-AuthorSchema.virtual('url').get(function(){
+authorSchema.virtual('url').get(function(){
     return '/catalog/author/' + this._id; 
 });
 
-var authorModel = mongoose.model('Author', authorSchema);
-
+//Export model
+module.exports = mongoose.model('Author', authorSchema);
