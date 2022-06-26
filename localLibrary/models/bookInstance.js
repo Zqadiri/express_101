@@ -9,4 +9,8 @@ var bookInstanceSchema = new Schema({
     due_back: { type: Date, default: Date.now },
 });
 
-var bookInstanceModel = mongoose.model('Book', bookInstanceSchema);
+bookInstanceSchema.virtual('url').get(function(){
+    return '/catalog/bookinstance/' + this._id;
+});
+
+var bookInstanceModel = mongoose.model('BookInstance', bookInstanceSchema);

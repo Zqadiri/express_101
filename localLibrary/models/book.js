@@ -13,10 +13,10 @@ var Schema = mongoose.Schema;
 
 var bookSchema = new Schema({
     title: {type: String, required: true},
-    // ObjectId: Represents specific instances of a model in the database
     author: { type: Schema.ObjectId, ref: 'Author', required: true },
     summary: {type: String, required: true},
     isbn: {type: String, required: true},
+    // from one document to many using an array of ObjectIds
     genre: [{ type: Schema.ObjectId, ref: 'Genre' }]
 });
 
@@ -25,6 +25,9 @@ var bookSchema = new Schema({
   set but that do not get persisted to MongoDB.
 */
 
+bookSchema.virtual('url').get(function(){
+  return '/catalog/book/' + this._id;
+});
 
 
 // Compile a model from schema -   An instance of a model is called a document

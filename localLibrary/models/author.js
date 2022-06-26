@@ -9,5 +9,34 @@ var authorSchema = new Schema({
     date_of_death: {type: Date},
 });
 
+
+// Virtual for author's full name
+AuthorSchema.virtual('name').get(function () {
+    var fullname = '';
+    if (this.first_name && this.family_name)
+        fullname = this.family_name + ', ' + this.first_name
+    if (!this.first_name || !this.family_name)
+        fullname = '';
+    return fullname;
+});
+
+// Virtual for author's lifespan
+AuthorSchema.virtual('lifespan').get(function() {
+    var lifetime_string = '';
+    if (this.date_of_birth) {
+      lifetime_string = this.date_of_birth.getYear().toString();
+    }
+    lifetime_string += ' - ';
+    if (this.date_of_death) {
+      lifetime_string += this.date_of_death.getYear()
+    }
+    return lifetime_string;
+});
+
+// Virtual for author's URL : returns the absolute URL required to get a particular instance of the model
+AuthorSchema.virtual('url').get(function(){
+    return '/catalog/author/' + this._id; 
+});
+
 var authorModel = mongoose.model('Author', authorSchema);
 

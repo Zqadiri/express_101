@@ -18,7 +18,8 @@ var app = express();
 
 // Database connection
 var mongoose  = require('mongoose'); // import the module
-var mongoURL = 'mongodb://127.0.0.1/my_database';
+// mongodb+srv://<username>:<password>@cluster0.8t04tva.mongodb.net/?retryWrites=true&w=majority 
+var mongoURL = 'mongodb+srv://zzz:bigbangB+2006@cluster0.8t04tva.mongodb.net/local_library?retryWrites=true&w=majority'; 
 mongoose.connect(mongoURL, {
   useNewUrlParser: true,
   useUnifiedTopology:true
