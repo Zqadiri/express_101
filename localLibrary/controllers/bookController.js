@@ -43,4 +43,4 @@ exports.book_update_get = function(req, res) {
 // Handle book update on POST.
 exports.book_update_post = function(req, res) {
     res.send('NOT IMPLEMENTED: Book update POST');
-};
+}

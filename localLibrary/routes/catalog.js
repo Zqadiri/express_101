@@ -1,116 +1,91 @@
 var express = require('express');
 var router =  express.Router();
 
-router.get('/', function(req, res) {
-});
+// Require controller modules.
+var book_controller = require('../controllers/bookController');
+var author_controller = require('../controllers/authorController');
+var genre_controller = require('../controllers/genreController');
+var book_instance_controller = require('../controllers/bookinstanceController');
+
+router.get('/', book_controller.index);
 
 // ? books -----------
 
-router.get('/books', function(req, res){
-});
+router.get('/books', book_controller.book_list);
 
-router.get('/book/:id', function(req, res){
-});
+router.get('/book/:id', book_controller.book_detail);
 
 // Display the create form on GET.
-router.get('/book/create', function(req, res){
-});
+router.get('/book/create', book_controller.book_create_get);
 
-router.post('/book/create', function(req, res){
-});
-
-router.put('/book/:id/update', function(req, res) {
-});
-
-router.delete('/book/:id/delete', function(req, res) {
-});
+router.post('/book/create', book_controller.book_create_post);
 
 // Display delete form on GET.
-router.get('/book/:id/delete', function(req, res){
-});
+router.get('/book/:id/delete', book_controller.book_delete_get);
+
+router.post('/book/:id/delete', book_controller.book_delete_post);
 
 // Display update form on GET.
-router.get('/book/:id/update', function(req, res){
-});
+router.get('/book/:id/update', book_controller.book_update_get);
+
+router.post('/book/:id/update', book_controller.book_update_post);
 
 // ? bookInstances -----------
 
+router.get('/bookinstance/create', book_instance_controller.bookinstance_create_get);
 
-router.get('/bookInstances', function(req, res){
-});
+router.post('/bookinstance/create', book_instance_controller.bookinstance_create_post);
 
-router.get('/bookInstance/:id', function(req, res){
-});
+router.get('/bookinstance/:id/delete', book_instance_controller.bookinstance_delete_get);
 
-router.get('/bookInstance/create', function(req, res){
-});
+router.post('/bookinstance/:id/delete', book_instance_controller.bookinstance_delete_post);
 
-router.post('/bookInstance/create', function(req, res){
-});
+router.get('/bookinstance/:id/update', book_instance_controller.bookinstance_update_get);
 
-router.get('/bookInstance/:id/update', function(req, res){
-});
+router.post('/bookinstance/:id/update', book_instance_controller.bookinstance_update_post);
 
-router.put('/bookInstance/:id/update', function(req, res) {
-});
+router.get('/bookinstance/:id', book_instance_controller.bookinstance_detail);
 
-router.get('/bookInstance/:id/delete', function(req, res){
-});
-
-router.delete('/bookInstance/:id/delete', function(req, res) {
-});
+router.get('/bookinstances', book_instance_controller.bookinstance_list);
 
 // ? genres -----------
 
-router.get('/genres', function(req, res){
-});
+router.get('/genre/create', genre_controller.genre_create_get);
 
-router.get('/genre/:id', function(req, res){
-});
+router.post('/genre/create', genre_controller.genre_create_post);
 
-router.get('/genre/create', function(req, res){
-});
+router.get('/genre/:id/delete', genre_controller.genre_delete_get);
 
-router.post('/genre/create', function(req, res){
-});
+router.post('/genre/:id/delete', genre_controller.genre_delete_post);
 
-router.put('/genre/:id/update', function(req, res) {
-});
+router.get('/genre/:id/update', genre_controller.genre_update_get);
 
-router.delete('/genre/:id/delete', function(req, res) {
-});
+router.post('/genre/:id/update', genre_controller.genre_update_post);
 
-router.get('/genre/:id/delete', function(req, res){
-});
+router.get('/genre/:id', genre_controller.genre_detail);
 
-router.get('/genre/:id/update', function(req, res){
-});
+router.get('/genres', genre_controller.genre_list);
 
 // ? authors -----------
 
-router.get('/authors', function(req, res){
-});
+router.get('/authors', author_controller.author_list);
 
-router.get('/author/:id', function(req, res){
-});
+router.get('/author/:id', author_controller.author_detail);
 
-router.get('author/create', function(req, res){
-});
+router.get('/author/:id/update', author_controller.author_update_get);
 
-router.post('author/create', function(req, res){
-});
+router.post('/author/:id/update', author_controller.author_update_post);
 
-router.put('/author/:id/update', function(req, res) {
-});
+// GET request to delete Author.
+router.get('/author/:id/delete', author_controller.author_delete_get);
 
-router.delete('/author/:id/delete', function(req, res) {
-});
+// POST request to delete Author.
+router.post('/author/:id/delete', author_controller.author_delete_post);
 
-router.get('/author/:id/delete', function(req, res){
-});
+router.get('/author/create', author_controller.author_create_get);
 
-router.get('/author/:id/update', function(req, res){
-});
+// POST request for creating Author.
+router.post('/author/create', author_controller.author_create_post);
 
 //Export Router
 module.exports = router;
