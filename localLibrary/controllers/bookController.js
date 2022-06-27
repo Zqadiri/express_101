@@ -72,8 +72,10 @@ exports.book_detail = function(req, res) {
           .exec(callback);
         },
     }, function(err, results) {
-        if (err) { return next(err); }
-        if (results.book==null) { // No results.
+        if (err)
+			return next(err);
+        if (results.book == null) 
+		{ // No results.
             var err = new Error('Book not found');
             err.status = 404;
             return next(err);

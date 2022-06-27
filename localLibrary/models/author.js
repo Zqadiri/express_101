@@ -9,7 +9,6 @@ var authorSchema = new Schema({
     date_of_death: {type: Date},
 });
 
-
 // Virtual for author's full name
 authorSchema.virtual('name').get(function () {
     var fullname = '';
