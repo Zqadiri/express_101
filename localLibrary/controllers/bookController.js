@@ -17,21 +17,21 @@ exports.index = function(req, res) {
 			This is called on a model, with an optional set of conditions to match against 
 			in the first argument, and a callback in the second argument
 		*/
-		book_count: function(callback) {
-			Book.countDocuments({}, callback);
-		},
-		book_instance_count: function(callback) {
-			BookInstance.countDocuments({}, callback);
-		},
-		book_instance_available: function(callback){
-			BookInstance.countDocuments({status:'Available'}, callback);
-		},
-		author_count: function(callback){
-			Author.countDocuments({}, callback);
-		},
-		genre_count: function(callback){
-			Genre.countDocuments({}, callback)
-		}
+			book_count: function(callback) {
+				Book.countDocuments({}, callback);
+			},
+			book_instance_count: function(callback) {
+				BookInstance.countDocuments({}, callback);
+			},
+			book_instance_available: function(callback){
+				BookInstance.countDocuments({status:'Available'}, callback);
+			},
+			author_count: function(callback){
+				Author.countDocuments({}, callback);
+			},
+			genre_count: function(callback){
+				Genre.countDocuments({}, callback)
+			}
 		}, function(err, results) {
 			// we render the page whether or not there was an error
 			res.render('index', {title: 'Local Library', error: err, data: results });
@@ -40,8 +40,20 @@ exports.index = function(req, res) {
 
 
 // Display list of all books.
-exports.book_list = function(req, res) {
-	res.send('NOT IMPLEMENTED: Book list');
+exports.book_list = function(req, res, next) {
+	/*
+		find return all Book objects, selecting to return only the title and author
+		(it will also return the _id and virtual fields)
+	*/
+	Book.find({}, 'title author')
+	.sort({title : 1})		// sorts the results by the title alphabetically
+	.populate('author')		// this will replace the stored book author id with the full author details.
+	.exec(function (err, list_books) {
+	  if (err)
+	  	return next(err); 
+	  //Successful, so render
+	  res.render('book_list', { title: 'Book List', book_list: list_books });
+	});
 };
 
 // Display detail page for a specific book.
