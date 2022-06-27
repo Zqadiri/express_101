@@ -46,7 +46,7 @@ exports.book_list = function(req, res, next) {
 		(it will also return the _id and virtual fields)
 	*/
 	Book.find({}, 'title author')
-	.sort({title : 1})		// sorts the results by the title alphabetically
+	.sort([['title', 'ascending']])		// sorts the results by the title alphabetically
 	.populate('author')		// this will replace the stored book author id with the full author details.
 	.exec(function (err, list_books) {
 	  if (err)
