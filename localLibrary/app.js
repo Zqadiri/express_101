@@ -30,7 +30,7 @@ db.on('error', console.error.bind(console, 'Mongi connection error : '));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
+app.set('view engine', 'pug');
 
 // add the middleware libraries that we imported above into the request handling chain.
 app.use(logger('dev'));
