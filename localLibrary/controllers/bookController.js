@@ -42,18 +42,20 @@ exports.index = function(req, res) {
 
 // Display list of all books.
 exports.book_list = function(req, res, next) {
+	// console.log("book req", req.body);
 	/*
 		find return all Book objects, selecting to return only the title and author
 		(it will also return the _id and virtual fields)
 	*/
 	Book.find({}, 'title author')
-	.sort([['title', 'ascending']])		// sorts the results by the title alphabetically
-	.populate('author')		// this will replace the stored book author id with the full author details.
-	.exec(function (err, list_books) {
-	  if (err)
-	  	return next(err); 
-	  //Successful, so render
-	  res.render('book_list', { title: 'Book List', book_list: list_books });
+	.sort([['title', 'ascending']])	// sorts the results by the title alphabetically
+	.populate('author')	// this will replace the stored book author id with the full author details.
+	.exec(function (err, list_books)
+	{
+		console.log("here : ", list_books);
+		if (err)
+			return next(err); 
+		res.render('book_list', { title: 'Book List', book_list: list_books });
 	});
 };
 
