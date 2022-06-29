@@ -44,46 +44,53 @@ exports.genre_detail = function(req, res, next) {
 };
 
 // Display Genre create form on GET.
-exports.genre_create_get = function(req, res) {
-	// res.send('NOT IMPLEMENTED: Genre create GET');
+exports.genre_create_get = function(req, res, next) {
 	res.render('genre_form', { title: 'Create Genre' });
 };
 
 // Handle Genre create on POST.
-exports.genre_create_post = function(req, res) {
-	// res.send('NOT IMPLEMENTED: Genre create POST');
 
-	body('name', 'Genre name required').trim().isLength({min: 1}).escape,
-	(req, res, next) => {
-		const errors = validationResult(req);
-		var genre = new Genre({
-			name: req.body.name
-		});
-		if (!errors.isEmpty()) // There is errors
+/*
+	instead of being a single middleware function (with arguments (req, res, next)) the controller
+	specifies an array of middleware functions. 
+	The array is passed to the router function and each method is called in order.
+	This approach is needed, because the validators are middleware functions.
+*/
+
+exports.genre_create_post = [
+    body('name', 'Genre name must contain at least 3 characters').trim().isLength({ min: 3 }).escape(), // first one
+    (req, res, next) => {
+        const errors = validationResult(req);
+        var genre = new Genre({ name: req.body.name });
+        if (!errors.isEmpty())
 		{
-			res.render('genre_form', {title: 'Create Genre', genre: genre, 
-			errors: errors.array()});
-		}
-		else
+            res.render('genre_form', { title: 'Create Genre', genre: genre, errors: errors.array()});
+        	return;
+        }
+        else
 		{
-			Genre.findOne({name: req.body.name})
-			.exec(function (err, found_genre){
+            Genre.findOne({ 'name': req.body.name })
+            .exec( function(err, found_genre)
+			{
 				if (err)
 					return next(err);
 				if (found_genre)
+				{
+					// Genre exists, redirect to its detail page.
 					res.redirect(found_genre.url);
+				}
 				else
 				{
-					genre.save(function (err){
-						if (err)
-							return next(err);
-						res.redirect(genre.url);
+					// Genre saved. Redirect to genre detail page.
+					genre.save(function (err) {
+					if (err) { return next(err); }
+					res.redirect(genre.url);
 					});
 				}
-			});
-		}
-	}
-};
+            });
+        }
+    }
+];
 
 // Display Genre delete form on GET.
 exports.genre_delete_get = function(req, res) {
