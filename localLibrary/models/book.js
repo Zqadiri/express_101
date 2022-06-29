@@ -29,7 +29,6 @@ bookSchema.virtual('url').get(function(){
   return '/catalog/book/' + this._id;
 });
 
-
 // Compile a model from schema -   An instance of a model is called a document
 module.exports = mongoose.model('Book', bookSchema);
 

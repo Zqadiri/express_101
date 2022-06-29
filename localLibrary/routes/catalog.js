@@ -13,11 +13,11 @@ router.get('/', book_controller.index);
 
 router.get('/books', book_controller.book_list);
 
+// Display the create form on GET.
 router.get('/book/create', book_controller.book_create_get);
 
 router.post('/book/create', book_controller.book_create_post);
 
-// Display the create form on GET.
 router.get('/book/:id', book_controller.book_detail);
 
 // Display delete form on GET.
