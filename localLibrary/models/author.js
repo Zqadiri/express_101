@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var { DateTime } = require('luxon');
 
 var Schema = mongoose.Schema;
 
@@ -22,14 +23,20 @@ authorSchema.virtual('name').get(function () {
 // Virtual for author's lifespan
 authorSchema.virtual('lifespan').get(function() {
     var lifetime_string = '';
-    if (this.date_of_birth) {
-      lifetime_string = this.date_of_birth.getYear().toString();
-    }
+    if (this.date_of_birth)
+        lifetime_string = DateTime.fromJSDate(this.date_of_birth).toLocaleString(DateTime.DATE_MED);
     lifetime_string += ' - ';
-    if (this.date_of_death) {
-      lifetime_string += this.date_of_death.getYear()
-    }
+    if (this.date_of_death)
+        lifetime_string += DateTime.fromJSDate(this.date_of_death).toLocaleString(DateTime.DATE_MED)
     return lifetime_string;
+});
+
+authorSchema.virtual('date_of_birth_yyyy_mm_dd').get(function (){
+    return DateTime.fromJSDate(this.date_of_birth).toISODate();
+});
+
+authorSchema.virtual('date_of_death_yyyy_mm_dd').get(function() {
+    return DateTime.fromJSDate(this.date_of_death).toISODate();
 });
 
 // Virtual for author's URL : returns the absolute URL required to get a particular instance of the model
