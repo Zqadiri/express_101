@@ -7,7 +7,7 @@ const session = require("express-session");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const mongoose = require("mongoose");
-const bcryptjs = require("bcryptjs");
+const bcrypt = require("bcryptjs");
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -22,6 +22,7 @@ var db = mongoose.connection; // get the default connection
 db.on('error', console.error.bind(console, 'Mongo connection error : '));
 
 var User = require('./models/user');
+const { isSharedArrayBuffer } = require('util/types');
 var app = express();
 
 // view engine setup
@@ -39,30 +40,53 @@ app.use(express.static(path.join(__dirname, 'public')));
 //! Setting up the localStrategy --------------------------------
 
 /*
-This function is what will be called when we use the passport.authenticate() function
+	This function is what will be called when we use the passport.authenticate() function
 */
 
 passport.use(
 	new LocalStrategy((username, password, done) => {
 		User.findOne({ username: username }, (err, user) => {
-			if (err) { 
+			console.log({user, password});
+			if (err) 
 				return done(err);
-			}
-			if (!user) {
+			if (!user)
 				return done(null, false, { message: "Incorrect username" });
-			}
-			if (user.password !== password) {
+			
+			// var hashsync = bcrypt.hashSync(password, 10);
+			// var comparesync = bcrypt.compareSync(password, hashsync);
+			// var hash = '$2a$10$7WK6Jc2.8Sch1zqOUjJ...7e8IrlP4ER0g0msgyp5ZTMYBicAnFA6';
+			// console.log({hash1iseqtohash2: hash === user.password, comparesync});
+			var result = bcrypt.compareSync(password, user.password, (err, res) => {
+				console.log(res, err);
+				if (err) return done(err);
+				if (res) return done(null, user);
+				else return done(null, false, { message: "Incorrect password" });
+			});
+			console.log(result);
+			if (result)
+				return done(null, user);
+			else
 				return done(null, false, { message: "Incorrect password" });
-			}
-			return done(null, user);
+			// var result2 = bcrypt.compareSync(hash, password)
+			// var result2 = bcrypt.compareSync(hash, password)
+			// console.log({result1, result2})
+			// if (result){
+			// 	console.log('hooray, it was true');
+			// 	return done(null, user);
+			// }
+			// else
+			// {
+			// 	console.log('oops, it was false');
+				// return done(null, false, { message: "Incorrect password" });
+			// }
 		});
 	})
 );
-	
+
 //! Sessions and serialization ----------------------------------
 	
 /*
-https://www.theodinproject.com/lessons/nodejs-authentication-basics#authentication
+	https://www.theodinproject.com/lessons/nodejs-authentication-basics#authentication
 */
 	
 passport.serializeUser(function(user, done) {
@@ -86,7 +110,6 @@ app.use(function(req, res, next) {
 });
 
 app.get("/", (req, res) => {
-	console.log(req.user);
 	res.render("index", { user: req.user });
 });
 
@@ -94,23 +117,35 @@ app.get("/sign-up", (req, res) => {
 	res.render("sign-up-form")
 });
 
-app.post("/sign-up", (req, res, next) => {
-	const user = new User({
-		username: req.body.username, 
-		password: req.body.password,
-	});
-	user.save(function (err) {
-		if (err) { 
-			return next(err);
-		}
-		res.redirect("/");
+function middleware1(req, res, next){
+	console.log(req.body);
+	next();
+}
+
+app.post("/sign-up",  middleware1,  (req, res, next) => {
+	bcrypt.hash(req.body.password, 10, (err, hashedPassword) => {
+		if (err)
+			next(err);
+		console.log({hashedPassword});
+		// otherwise, store hashedPassword in DB
+		const user = new User({
+			username: req.body.username, 
+			password: hashedPassword,
+		});
+		user.save(function (err) {
+			if (err) { 
+				return next(err);
+			}
+			res.redirect("/");
+		});
 	});
 });
 
-app.post("/log-in", 
-	passport.authenticate("local", {
-		successRedirect: "/",
-		failureRedirect: "/"
+app.post("/log-in",
+		passport.authenticate("local", {
+			successRedirect: "/"
+			,
+			failureRedirect: "/"
 	})
 );
 
