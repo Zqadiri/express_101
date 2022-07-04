@@ -12,9 +12,10 @@ const bcrypt = require("bcryptjs");
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
+require('dotenv').config()
+console.log(process.env)
 // Database connection
-var mongoURL = 'mongodb+srv://zzz:bigbangB+2006@cluster0.8t04tva.mongodb.net/auth?retryWrites=true&w=majority'; 
-mongoose.connect(mongoURL, {
+mongoose.connect(process.env.DB_URL, {
 	useNewUrlParser: true,
 	useUnifiedTopology:true
 }) //set up default mongoose connection
@@ -51,34 +52,13 @@ passport.use(
 				return done(err);
 			if (!user)
 				return done(null, false, { message: "Incorrect username" });
-			
-			// var hashsync = bcrypt.hashSync(password, 10);
-			// var comparesync = bcrypt.compareSync(password, hashsync);
-			// var hash = '$2a$10$7WK6Jc2.8Sch1zqOUjJ...7e8IrlP4ER0g0msgyp5ZTMYBicAnFA6';
-			// console.log({hash1iseqtohash2: hash === user.password, comparesync});
 			var result = bcrypt.compareSync(password, user.password, (err, res) => {
 				console.log(res, err);
 				if (err) return done(err);
 				if (res) return done(null, user);
 				else return done(null, false, { message: "Incorrect password" });
 			});
-			console.log(result);
-			if (result)
-				return done(null, user);
-			else
-				return done(null, false, { message: "Incorrect password" });
-			// var result2 = bcrypt.compareSync(hash, password)
-			// var result2 = bcrypt.compareSync(hash, password)
-			// console.log({result1, result2})
-			// if (result){
-			// 	console.log('hooray, it was true');
-			// 	return done(null, user);
-			// }
-			// else
-			// {
-			// 	console.log('oops, it was false');
-				// return done(null, false, { message: "Incorrect password" });
-			// }
+			if (res) return done(null, user);
 		});
 	})
 );
