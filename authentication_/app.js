@@ -7,6 +7,7 @@ const session = require("express-session");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const mongoose = require("mongoose");
+const bcryptjs = require("bcryptjs");
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -35,8 +36,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-
-
 //! Setting up the localStrategy --------------------------------
 
 /*
@@ -58,32 +57,36 @@ passport.use(
 			return done(null, user);
 		});
 	})
-	);
+);
 	
-	//! Sessions and serialization ----------------------------------
+//! Sessions and serialization ----------------------------------
 	
-	/*
-	https://www.theodinproject.com/lessons/nodejs-authentication-basics#authentication
-	*/
+/*
+https://www.theodinproject.com/lessons/nodejs-authentication-basics#authentication
+*/
 	
-	passport.serializeUser(function(user, done) {
-	 done(null, user.id);
+passport.serializeUser(function(user, done) {
+	done(null, user.id);
+});
+
+passport.deserializeUser(function(id, done) {
+	User.findById(id, function(err, user) {
+		done(err, user);
 	});
-	
-	passport.deserializeUser(function(id, done) {
-		User.findById(id, function(err, user) {
-			done(err, user);
-		});
-	});
+});
+
+app.use(passport.initialize());
+app.use(passport.session());
 	
 //! Routers ---------------------------------------------------
 
-// app.use(function(req, res, next) {
-// 		res.locals.currentUser = req.user;
-// 		next();
-// });
+app.use(function(req, res, next) {
+		res.locals.currentUser = req.user;
+		next();
+});
 
 app.get("/", (req, res) => {
+	console.log(req.user);
 	res.render("index", { user: req.user });
 });
 
@@ -122,8 +125,7 @@ app.get("/log-out", (req, res) => {
 	
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-app.use(passport.initialize());
-app.use(passport.session());
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
