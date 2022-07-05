@@ -2,18 +2,18 @@ var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
+const mongoose = require("mongoose");
 var logger = require('morgan');
 const session = require("express-session");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
-const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
 require('dotenv').config()
-console.log(process.env)
+// console.log(process.env)
 // Database connection
 mongoose.connect(process.env.DB_URL, {
 	useNewUrlParser: true,

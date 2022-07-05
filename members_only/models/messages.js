@@ -1,4 +1,4 @@
-var mongoose = require('mogoose');
+var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 const { DateTime } = require("luxon");
 
